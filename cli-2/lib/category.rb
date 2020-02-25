@@ -17,8 +17,7 @@ class Category
     if object == []
       object = Category.new(item)
       object
-    else
-      object
     end
+    object
   end
 end

@@ -17,9 +17,8 @@ class Quote
     if object == []
       object = Quote.new(item)
       object
-    else
-      object
     end
+   object
   end
 
 end
