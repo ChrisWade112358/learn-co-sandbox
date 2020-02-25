@@ -12,13 +12,15 @@ class Quote
     @@all
   end
   
-   def self.search_or_new(item)
+  def self.search_or_new(item)
     object = @@all.select{|a| a.quote == item}
     if object == []
       object = Quote.new(item)
       object
     end
-   object
+    object
   end
-
+  
+  
+    
 end

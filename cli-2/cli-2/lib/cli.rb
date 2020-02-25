@@ -190,7 +190,7 @@ class CLI
         end
       when 3
         if start == 0
-          error_holder = "THis is the beginning of the list. If you would like to go back to the Main Menu, select number 4."
+          error_holder = "This is the beginning of the list. If you would like to go back to the Main Menu, select number 4."
           answer = 1
         else
           start -= 25
