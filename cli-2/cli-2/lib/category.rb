@@ -13,11 +13,10 @@ class Category
   end
   
   def self.search_or_new(item)
-    object = @@all.select{|a| a == item}
-    if object == []
+    object = @@all.find{|a| a.category == item}
+    if object == nil 
       object = Category.new(item)
-      object
-    end
+    end 
     object
   end
 end

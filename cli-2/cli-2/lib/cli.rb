@@ -44,9 +44,9 @@ class CLI
         letter = CLI.choose_letter
         CLI.display_authors_by_letter(letter, start = 0, stop = 24)
       when 2
-        CLI.random_list_of_top_authors
+        CLI.display_random_top_authors
       when 3
-        CLI.browse_by_topic
+        CLI.display_topics_list
       when 4 
         CLI.random_top_topics
       end
@@ -112,7 +112,7 @@ class CLI
     end
   end
   
-  def self.display_top_authors
+  def self.display_random_top_authors
     authors_list = Scraper.scrape_top_authors
     error_holder = ""
     answer = 1
@@ -128,23 +128,121 @@ class CLI
       puts "Enter 3 to go back to the Main Menu.".colorize(:green)
       puts "Enter \"exit\" to exit the program".colorize(:green)
       input = gets.downcase.strip!
-    if input == "exit"
-      puts "Thanks for visiting. Good bye.".colorize(:magenta)
-      exit! 
-    elsif input.to_i > 0 && input.to_i <= 3 
-      @input = input.to_i
-    else
-      puts "Please enter a valid number or type exit."
-    end
-    case @input
-    when 1
-      puts "Enter author number."
-      a = gets.strip!.to_i
-      author = rand_top_authors[a - 1]
-      CLI.display_quotes_by_author(author)
+      if input == "exit"
+        puts "Thanks for visiting. Good bye.".colorize(:magenta)
+        exit! 
+      elsif input.to_i > 0 && input.to_i <= 3 
+        @input = input.to_i
+      else
+        puts "Please enter a valid number or type exit."
+      end
+      case @input
+      when 1
+        puts "Enter author number."
+        a = gets.strip!.to_i
+        author = rand_top_authors[a - 1]
+        CLI.display_quotes_by_author(author)
+      end
     end
   end
-end 
+  
+  def display_topics_list
+    topipcs_arr = Scraper.scrape_top_topics
+    start = 0
+    stop = 24
+    answer = 1
+    error_holder = ""
+    while answer = 1
+      topics_arr[start..stop].each_with_index do |topic, index|
+        puts "#{index + 1}| #{topic.category}"
+      end
+      puts
+      puts error_holder
+      puts "Enter 1 to select the category and see quotes from that category.".colorize(:green)
+      puts "Enter 2 for the next 25 categories.".colorize(:green)
+      puts "Enter 3 to go back to the previous screen.".colorize(:green)
+      puts "Enter 4 to go back to the main menu.".colorize(:green)
+      puts "Enter exit to exit the program.".colorize(:green)
+      input = gets.downcase.strip!
+      if input == "exit"
+        puts "Thank's for visiting. Good bye.".colorize(:magenta)
+        exit!
+        elsif input.to_i > 0 && input.to_i <= 4 
+          @input = input.to_i
+        else
+          error_holder = "Please enter a valid number or type exit."
+          answer = 1
+        end
+      case @input
+      when 1
+        puts "Enter a category number."
+        num = gets.strip!.to_i
+        category = topics_arr[start + a - 1]
+        category.display_quotes_by_category
+      when 2
+        if stop + 25 > topics_arr.size
+          error_holder = "You're at the end of the list. Please make another selection."
+          answer = 1
+        else
+          start += 25
+          stop  += 25
+          answer = 1
+        end
+      when 3
+        if start == 0
+          error_holder = "THis is the beginning of the list. If you would like to go back to the Main Menu, select number 4."
+          answer = 1
+        else
+          start -= 25
+          stop -= 25
+          answer = 1
+        end
+      when 4
+        CLI.main_menu
+      end
+    end
+  end
+  
+  def random_top_topics
+    topics_arr = Scraper.scrape_top_topics
+    answer = 1
+    error_holder = ""
+    while answer == 1
+      rand_top_topics = topics_arr.sample(10)
+      rand_top_topics.each_with_index do |topic, index|
+        puts "#{index + 1}| #{topic.category}"
+      end
+      puts
+      puts error_holder
+      puts "Enter 1 to select a category you would like to see quotes from.".colorize(:green)
+      puts "Enter 2 to Spin Again!".colorize(:green)
+      puts "Enter 3 to go back to the main menu.".colorize(:green)
+      puts "Enter exit to exit the program.".colorize(:green)
+      input = gets.downcase.strip!
+      if input == "exit"
+        puts "Thanks for visiting. Good bye.".colorize(:magenta)
+        exit! 
+      elsif input.to_i > 0 && input.to_i < 5 
+        @input = input.to_i
+      else
+        error_holder = "Please enter a valid number or type exit."
+        answer = 1
+      end
+      case @input
+      when 1 
+        puts "Enter a category number."
+        num = gets.strip!.to_i 
+        category = topics_arr[num - 1]
+        category.display_quotes_by_category
+      when 2
+        answer = 1
+      when 3
+        CLI.main_menu
+      end 
+    end 
+  end
+  
+  
 end           
           
     

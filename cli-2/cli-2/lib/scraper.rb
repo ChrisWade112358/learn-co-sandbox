@@ -77,20 +77,16 @@ class Scraper
     end
   end
   
-  def self.scrape_top_topic
+  def self.scrape_top_topics
     top_topics_arr = []
     topic_page = "http://brainyquote.com/topics"
     page = Nokogiri::HTML(open(topic_page))
-    page.css('.bqLn').css('a').each do |f|
+    page.css('div.row.bq_left').css('.bqLn').css('a').each do |f|
       cat = f.text.strip!
       category = Category.search_or_new(cat)
       top_topics_arr << category
-      top_topics_arr.each do |a|
-        if a.category == nil 
-          top_topics_arr.delete(a)
-        end
-      end
     end
+    binding.pry
     top_topics_arr
   end
   
@@ -101,12 +97,18 @@ class Scraper
     page.css(".bqLn").css('a').each do |f|
       name = f.css('.authorContentName').text
       author = Author.search_or_new(name)
-      
+      top_authors_arr << author 
     end
-    binding.pry
+    top_authors_arr.each do |item|
+      if item.class == Array
+        top_authors_arr.delete(item)
+      elsif item.name == ""
+        top_authors_arr.delete(item)
+      end 
+    end
     top_authors_arr
   end
 end
 
-t = Scraper.scrape_top_authors
-t.each{|a| puts a.name}
+t = Scraper.scrape_top_topics
+t.each{|a| puts a.category}
